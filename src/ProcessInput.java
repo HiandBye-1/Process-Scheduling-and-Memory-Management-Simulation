@@ -2,8 +2,7 @@ import java.util.*;
 import java.io.*;
 
 public class ProcessInput {
-    //print nothing if no error
-
+    
     public static boolean readFile(String filename, Set<String> set, List<Processes> processes) throws Exception {
         Scanner in = new Scanner(new File(filename));
 

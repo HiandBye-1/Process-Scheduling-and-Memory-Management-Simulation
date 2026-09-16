@@ -5,6 +5,8 @@ public class Simulator {
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
         int choice = 0;
+
+
         clearScreen();
         System.out.println("--- CPU Scheduling Simulator ---");
         System.out.println("1. Round Robin");
@@ -25,6 +27,7 @@ public class Simulator {
         List<Processes> processes = new ArrayList<>();
         int quantum = 0;
         switch(choice){
+            //ROUND ROBIN
             case 1:
                 System.out.print("Enter Quantum: ");
                 try{//check quantum number
@@ -54,7 +57,8 @@ public class Simulator {
                     return;
                 }
                     break;
-
+                    
+            //FCFS
             case 2:
                 /// FCFS
                 break;

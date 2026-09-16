@@ -32,7 +32,7 @@ public class RoundRobin {
             Processes p = queue.poll();
             if(p.burstTime <= quantum){//if complete
                 completed.add(p);
-                addGanatt(ready, p.pid, time, time+p.burstTime);
+                ganattChart.addGanatt(ready, p.pid, time, time+p.burstTime);
                 time += p.burstTime;
                 CPUbusy+=p.burstTime; 
                 p.completionTime = time;
@@ -43,7 +43,7 @@ public class RoundRobin {
                 averageWT += p.waitingTime;
             }else{//if not complete
                 p.burstTime -= quantum;
-                addGanatt(ready, p.pid, time, time+quantum);
+                ganattChart.addGanatt(ready, p.pid, time, time+quantum);
                 time += quantum;
                 CPUbusy+=quantum;
                 //check if there are other proces coming
@@ -64,74 +64,11 @@ public class RoundRobin {
         averageWT /= processes.size();
         CPUutilize = (CPUbusy/time)*100;
 
-        printGanatt(ready);
+        ganattChart.printGanatt(ready);
 
         
     }
 
-    public static void printGanatt(ArrayList<GanattStruct> ganatt){
-        //fill gaps
-        if(ganatt.get(0).startTime !=0){
-            addGanattat(ganatt, "IDLE", 0, ganatt.get(0).startTime,0);
-        }
-
-        for(int i = ganatt.size()-1; i > 0; i--){
-            if(ganatt.get(i).startTime != ganatt.get(i-1).endTime){
-                addGanattat(ganatt, "IDLE", ganatt.get(i-1).endTime, ganatt.get(i).startTime, i);
-            }
-        }//done gaps
-
-        //print start
-
-        int size = 0;
-        int count = 0;
-        while(size < ganatt.size()){
-            count = 0;
-            for(int i = size ; i < ganatt.size(); i++){
-                if(count == 6){
-                    System.out.println("|");
-                    break;
-                }
-                System.out.printf("| %-6s",ganatt.get(i).pid);
-
-                if(i == ganatt.size()-1){//end of line
-                    System.out.println("|");
-                }
-                count++;
-
-            }
-
-            count = 0;
-            for(int j = size;  j < ganatt.size(); j++){
-                if(count == 6){
-                    System.out.println(ganatt.get(j-1).endTime+"\n");
-                    break;
-                }
-                System.out.printf("%-8d",ganatt.get(j).startTime);
-
-                if(j == ganatt.size()-1){//end of line
-                    System.out.println(ganatt.get(j).endTime);
-                }
-                count++;
-            }
-
-            size += count;
-
-
-        }//while
-
-
-
-    }
-    public static void addGanatt(ArrayList<GanattStruct> ganatt, String pid, int startTime, int endTime){
-        GanattStruct g = new GanattStruct(pid, startTime, endTime);
-        ganatt.add(g);
-    }
-
-    public static void addGanattat(ArrayList<GanattStruct> ganatt, String pid, int startTime, int endTime, int index){
-        GanattStruct g = new GanattStruct(pid, startTime, endTime);
-        ganatt.add(index, g);
-    }
 
 
 }

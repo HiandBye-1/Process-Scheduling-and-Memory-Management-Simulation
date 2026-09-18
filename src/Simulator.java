@@ -1,5 +1,5 @@
 import java.util.*;
-import java.io.*;
+
 
 public class Simulator {
     public static void main(String[] args) {
@@ -7,64 +7,110 @@ public class Simulator {
         int choice = 0;
 
 
-        clearScreen();
-        System.out.println("--- CPU Scheduling Simulator ---");
-        System.out.println("1. Round Robin");
-        System.out.println("2. FCFS");
-        System.out.println("3. Exit");
 
 
-        try{
-            System.out.print("Enter choice: ");
-            choice = in.nextInt();
-        }catch(Exception e){
-            System.out.println("Error: Please enter a number between 1 and 3.");
-            return;
-        }
+        boolean running = true;
+        while(running){//main loop
+
+            clearScreen();
+            System.out.println("--- CPU Scheduling Simulator ---");
+            System.out.println("1. Round Robin");
+            System.out.println("2. FCFS(CPU Scheduling)");
+            System.out.println("3. Best Fit Memory Management");
+            System.out.println("4. FIFO(Page Replacement");
+            System.out.println("5. Exit");
+        
+            try{// if not a number
+                System.out.print("Enter choice: ");
+                choice = in.nextInt();
+            }catch(Exception e){
+                System.out.println("Error: Please enter a number between 1 and 4.");
+                return;
+            }
 
 
-        Set<String> set = new HashSet<>();
-        List<Processes> processes = new ArrayList<>();
-        int quantum = 0;
-        switch(choice){
-            //ROUND ROBIN
-            case 1:
-                System.out.print("Enter Quantum: ");
-                try{//check quantum number
-                    quantum = in.nextInt();
-                }catch(Exception e){
-                    System.out.println("Error: Please enter a number for Quantum.");
-                    return;
-                }
+            Set<String> set = new HashSet<>();
+            List<Processes> processes = new ArrayList<>();
+            ArrayList<Integer> storage = new ArrayList<>();
+            ArrayList<Integer> request = new ArrayList<>();
+            int quantum = 0;
 
-                if(quantum <= 0){
-                    System.out.println("Error: Quantum must be greater than 0.");
-                    return;
-                }
-
-                    
+            String filename = "";
+            
+            if(choice < 5 && choice > 0){//if choice is valid
                 System.out.print("Enter file name: ");
-                String filename = in.next();
-                
-                try{//check file valid
-                    if(ProcessInput.readFile("input/"+filename, set, processes)){//if file is valid
-                        RoundRobin.run(processes, quantum);
-                    }else{
+                filename = in.next();
+            }
+
+
+            switch(choice){
+                //ROUND ROBIN
+                case 1:
+                    System.out.print("Enter Quantum: ");
+                    try{//check quantum number
+                        quantum = in.nextInt();
+                    }catch(Exception e){
+                        System.out.println("Error: Please enter a number for Quantum.");
+                        continue;
+                    }
+
+                    if(quantum <= 0){
+                        System.out.println("Error: Quantum must be greater than 0.");
                         return;
                     }
-                }catch(Exception e){
-                    System.out.println("Error: Invalid file.");
-                    return;
-                }
-                    break;
+
                     
-            //FCFS
-            case 2:
-                /// FCFS
-                break;
-            case 3:
-                System.out.println("Goodbye!");
-                break;
+                    try{//check file valid
+                        if(ProcessInput.readFile("input/"+filename, set, processes)){//if file is valid
+                            RoundRobin.run(processes, quantum);
+                        }else{
+                            return;
+                        }
+                    }catch(Exception e){
+                        System.out.println("Error: Invalid file.");
+                        return;
+                    }
+                        break;
+                        
+                //FCFS
+                case 2:
+                    try{//check file valid
+                        if(ProcessInput.readFile("input/"+filename, set, processes)){//if file is valid
+                            FCFS.run(processes);
+                        }else{
+                            return;
+                    }
+                    }catch(Exception e){
+                        System.out.println("Error: Invalid file.");
+                        return;
+                    }
+                    break;
+
+                //Memory allocation
+                case 3:
+                    try{
+                        if(MemoryInput.readFile("input/"+filename, request, storage)){//if file is valid
+                            //BestFit.run(request, storage);
+                        }else{
+                            return;
+                        }
+                    }catch(Exception e){
+                        System.out.println("Error: Invalid file.");
+                        return;
+                    }
+                    break;
+
+                case 4:
+                    //FIFO
+                    break;
+                case 5:
+                    System.out.println("Goodbye!");
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Error: Please enter a number between 1 and 4.");
+                    break;
+            }
         }
 
 

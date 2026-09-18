@@ -1,10 +1,10 @@
+
 import java.util.*;
 import java.io.*;
-public class MemoryInput {
-    //first line = memory-block sizes
-    //second line = process memory requests
+public class PagingInput {
+    public static int size;
 
-    public static boolean readFile(String filename, ArrayList<Integer> request, ArrayList<Integer> storage) throws Exception{
+    public static boolean readFile(String filename,  ArrayList<Integer> values) throws Exception{
         Scanner in = new Scanner(new File(filename));
 
 
@@ -27,14 +27,14 @@ public class MemoryInput {
             
             }else {//if not empty
                 if(count == 0){
-                    if(validateStorage(input.split("\\s+"), storage, line)){
+                    if(validateSize(input.split("\\s+"), line)){
                         count++;
                     }else{
                         in.close();
                         return false;
                     } 
                 }else if(count == 1){
-                    if(validateRequest(input.split("\\s+"), request, line)){
+                    if(validatePages(input.split("\\s+"), values, line)){
                         count++;
                     }else{
                         in.close();
@@ -53,46 +53,48 @@ public class MemoryInput {
         //if only 1 line exist
         if (count <= 1) {
             in.close();
-            System.out.println("Error: only 1 line exits, invalid input");
+            System.out.println("Error: only 1 line exists, invalid input");
             return false;
         }
-
 
         in.close();
         return true;
     }
 
-    public static boolean validateStorage(String[] current, ArrayList<Integer> storage, int line){
-        for(int i = 0; i < current.length; i++){
-            try{
-                int value = Integer.parseInt(current[i]);
-                if(value <= 0){
-                    storage.clear();
-                    System.out.println("Error: non-positive block size for storing at position " + i + ".");
-                    return false;
-                }
-                storage.add(value);
-            }catch(Exception e){
-                System.out.println("Error: incorrect type input on line " + line + ".");
-                storage.clear();
-                return false;
-            }
+    public static boolean validateSize(String[] current, int line){
+        if(current.length != 1){//check if only 1 input
+            System.out.println("Error: invalid input on line " + line + ".");
+            return false;
         }
+
+        //if 1 ipnut 
+        try{
+            int value = Integer.parseInt(current[0]);
+            if(value <= 0){
+                System.out.println("Error: non-positive size detected.");
+                return false;
+            }else size = value;
+            
+        }catch(Exception e){
+            System.out.println("Error: incorrect type input on line " + line + ".");
+            return false;
+        }
+        
         return true;
     }
 
-    public static boolean validateRequest(String[] current, ArrayList<Integer> request, int line){
+    public static boolean validatePages(String[] current, ArrayList<Integer> values, int line){
         for(int i = 0; i < current.length; i++){
             try{
                 int value = Integer.parseInt(current[i]);
                 if(value <= 0){
-                    request.clear();
-                    System.out.println("Error: non-positive memory request at position " + i + ".");
+                    values.clear();
+                    System.out.println("Error: non-positive page at position " + i + ".");
                     return false;
                 }
-                request.add(value);
+                values.add(value);
             }catch(Exception e){
-                request.clear();
+                values.clear();
                 System.out.println("Error: incorrect type input on line "+ line + ".");
                 return false;
             }
@@ -101,3 +103,4 @@ public class MemoryInput {
     }
 
 }
+

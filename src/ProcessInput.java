@@ -130,7 +130,7 @@ public class ProcessInput {
         }
 
         try {
-            int priority = Integer.parseInt(current[3]);
+            int priority = Integer.parseInt(current[3]);//check for negative priority
         } catch (Exception e) {
             printError();
             return false;
@@ -152,7 +152,7 @@ public class ProcessInput {
         }
 
         try {
-            int value = Integer.parseInt(pid.substring(1));
+            int value = Integer.parseInt(pid.substring(1));//check for negative pid
 
             if (set.contains(pid)) {
                 System.out.println("Error: Duplicate PID found on line " + line + ".");

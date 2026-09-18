@@ -1,14 +1,7 @@
 import java.util.*;
 
 public class FCFS {
-    public static void main(String[] args)throws Exception{
-        //test
-    Set<String> set = new HashSet<>();
-    List<Processes> processes = new ArrayList<>();
-    ProcessInput.readFile("input/processes1.txt", set, processes);
 
-    run(processes);
-    }
     public static void run(List<Processes> processes){
         Set<Processes> seen = new HashSet<>();
         double CPUbusy = 0;
@@ -21,31 +14,41 @@ public class FCFS {
         int time = 0;
 
         boolean added = false;
+        
+        
+        Processes lowest =null;
+
         while(seen.size() != processes.size()){
             added = false;
-            for(Processes p : processes){
+            for(int i = 0; i < processes.size(); i++){
                 //add to queue if arrival time met
-                if(p.arrivalTime <= time && !seen.contains(p)){
-                    p.completionTime = time + p.originalBurstTime;
-                    p.turnaroundTime = p.completionTime - p.arrivalTime;
-                    p.waitingTime = p.turnaroundTime - p.originalBurstTime;
-                    CPUbusy += p.burstTime;
-                    TAT += p.turnaroundTime;
-                    WT += p.waitingTime;
-                    seen.add(p);
-                    modified.add(p);
-                    ganatt.add(new GanattStruct(p.pid, time, p.burstTime + time));
-                    time += p.burstTime;
-                    added = true;
-                    //end for adding to ganatt
-
-
+                Processes p = processes.get(i);
+                if(p.arrivalTime <= time && !seen.contains(p) &&
+                (lowest == null || p.arrivalTime < lowest.arrivalTime)){
+                lowest = p;
                 }
             }
+                
+            if( lowest != null && !seen.contains(lowest)){
+                Processes p = lowest;
+                p.completionTime = time + p.originalBurstTime;
+                p.turnaroundTime = p.completionTime - p.arrivalTime;
+                p.waitingTime = p.turnaroundTime - p.originalBurstTime;
+                CPUbusy += p.burstTime;
+                TAT += p.turnaroundTime;
+                WT += p.waitingTime;
+                seen.add(p);
+                modified.add(p);
+                ganatt.add(new GanattStruct(p.pid, time, p.burstTime + time));
+                time += p.burstTime;
+                    
+                lowest = null;
+                added = true;
+                    //end for adding to ganatt
+                }
+            
             //if queue is empty, move to next time
-            if (added == false){
-                time++;
-            }
+            if (added == false) time++;
 
         }
 

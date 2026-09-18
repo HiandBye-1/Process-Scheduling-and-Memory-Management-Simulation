@@ -64,8 +64,18 @@ public class RoundRobin {
         averageWT /= processes.size();
         CPUutilize = (CPUbusy/time)*100;
 
+        System.out.println("--- Round Robin Scheduling ---\n");
+        System.out.println("Quantum: " + quantum);
+        System.out.println("\nGrantt Chart:");
         ganattChart.printGanatt(ready);
-
+        System.out.printf("\n%-10s %-5s %-5s %-5s%n", "Process", "CT", "TAT", "WT");
+        for(Processes p : completed){
+            System.out.printf("%-10s %-5d %-5d %-5d%n", p.pid, p.completionTime, p.turnaroundTime, p.waitingTime);
+        }
+        System.out.printf("\nAverage Turnaround Time: %.2f", averageTAT);
+        System.out.printf("\nAverage Waiting Time: %.2f", averageWT);
+        System.out.printf("\nCPU Busy Time: %.2f", CPUbusy);
+        System.out.printf("\nCPU Utilization: %.2f%%", CPUutilize);
         
     }
 
